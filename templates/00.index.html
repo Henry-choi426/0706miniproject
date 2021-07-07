@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main</title>
+
+  <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+  <script src="{{url_for('static', filename='js/script.js')}}"></script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+  <div class="container">
+
+    <br><br><br>
+    <h1>
+      <i class="material-icons" style="font-size:24px;color:white;">coffee</i>
+      무신사 검색하기
+      <i class="material-icons" style="font-size:24px;color:white;">coffee</i>
+    </h1>
+
+    <br><br>
+    <form>
+
+      <label for="name"><b></b></label><br>
+      <input type="text" class="form" id="name" name="name" value="반팔" placeholder="옷" required>
+      <button type="button" onclick="search_()" class="button">검색하기</button>
+    </form>
+  </div>
+  <br>
+  <hr><br>
+  <div id="tableBody"></div>
+  <script>
+
+    function search_() {
+
+      const xhttp = new XMLHttpRequest();
+
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          data = JSON.parse(this.responseText);
+          tableCreate(data)
+        };
+      };
+      
+      xhttp.open("post", "search");
+      xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      queryString = 'name=' + document.getElementById("name").value;
+      console.log(queryString)
+      xhttp.send(queryString);
+    };
+
+    function tableCreate(td) {
+      var tc = new Array();
+      var tableData = '<table>';
+      var totalP = 0;
+
+      tableData += '<tr>';
+      tableData += '<td><i class="fa fa-quentity">브랜드링크</i></td>';
+      tableData += '<td><i class="fa fa-quentity">브랜드</i></td>';
+      tableData += '<td><i class="fa fa-price">제품명</i></td>';
+      tableData += '<td><i class="fa fa-price">가격</i></td>';
+      tableData += '</tr>';
+
+      for (key in td) {
+        tableData += '<tr>';
+        tableData += '<td><i class="fa fa-quentity">' + td[key].link + '</i></td>';
+        tableData += '<td><i class="fa fa-quentity">' + td[key].brand + '</i></td>';
+        tableData += '<td><i class="fa fa-price">' + td[key].proTitle + '</i></td>';
+        tableData += '<td><i class="fa fa-price">' + td[key].proPrice + '</i></td>';
+        tableData += '</tr>';
+      };
+      tableData = tableData + '</table>';
+      document.getElementById("tableBody").innerHTML = tableData;
+    }
+  </script>
+
+
+</body>
+
+</html>
